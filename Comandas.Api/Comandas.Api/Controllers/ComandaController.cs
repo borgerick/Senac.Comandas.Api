@@ -1,4 +1,5 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -44,13 +45,30 @@ namespace Comandas.Api.Controllers
 
         // POST api/<ComandaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IResult Post([FromBody] ComandaCreateRequest comandaCreate)
         {
-        }
+                if (comandaCreate.NomeCliente.Length < 3)
+                    return Results.BadRequest("A senha deve ter no minimo 6 caracteres");
+                if (comandaCreate.NumeroMesa <= 0)
+                    return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
+                if (comandaCreate.CardapioItemIds.Length == 0) ;
+                return Results.BadRequest("O email deve ser valido.");
+
+                var novaComanda = new Comanda
+                {
+                    Id = comandas.Count + 1,//gera o id automatico
+                    NomeCliente = comandaCreate.NomeCliente,
+                    NumeroMesa = comandaCreate.NumeroMesa,
+                };
+                //adiciona o usuario na lista
+                comandas.Add(novaComanda);
+                return Results.Created($"/api/usuario/{novaComanda.Id}", novaComanda);
+            }
+        
 
         // PUT api/<ComandaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] ComandaUpdateRequest comandaUpdate)
         {
         }
 

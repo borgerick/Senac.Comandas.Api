@@ -1,4 +1,5 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -48,17 +49,43 @@ namespace Comandas.Api.Controllers
 
         // POST api/<UsuarioController>
         [HttpPost]
-        public IResult Post([FromBody] Usuario usuario)
+        public IResult Post([FromBody] UsuarioCreateRequest usuarioCreate)
         {
+            if(usuarioCreate.Senha.Length<6)
+                return Results.BadRequest("A senha deve ter no minimo 6 caracteres");
+            if (usuarioCreate.Nome.Length < 3)
+                return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
+            if (usuarioCreate.Email.Length < 5 || !usuarioCreate.Email.Contains("@"));
+                return Results.BadRequest("O email deve ser valido.");
+            
+            var usuario = new Usuario
+            {
+                Id = usuarios.Count + 1,//gera o id automatico
+                Nome = usuarioCreate.Nome,
+                Email = usuarioCreate.Email,
+                Senha = usuarioCreate.Senha
+            };
             //adiciona o usuario na lista
             usuarios.Add(usuario);
             return Results.Created($"/api/usuario/{usuario.Id}", usuario);
         }
-
+        //ATUALIZA UM USUARIO
         // PUT api/<UsuarioController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IResult Put(int id, [FromBody] UsuarioUpdateRequest usuarioUpdate)
         {
+            // BUSCA O USUARIO NA LISTA PELO ID
+            var usuario = usuarios.
+                FirstOrDefault(u => u.Id == id);
+            // SE O USUARIO NAO FOR ENCONTRADO, RETORNA 404 NOTFOUND
+            if (usuario is null)
+                return Results.NotFound($"Usuário do id {id} nao encontrado.");
+            // ATUALIZA CADASTRO
+            usuario.Nome = usuarioUpdate.Nome;
+            usuario.Email = usuarioUpdate.Email;
+            usuario.Senha = usuarioUpdate.Senha;
+            // RETORNA NO CONTENT
+            return Results.NotFound();
         }
 
         // DELETE api/<UsuarioController>/5

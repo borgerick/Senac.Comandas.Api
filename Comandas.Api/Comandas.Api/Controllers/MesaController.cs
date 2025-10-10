@@ -1,4 +1,5 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -43,14 +44,34 @@ namespace Comandas.Api.Controllers
 
         // POST api/<MesaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IResult Post([FromBody] MesaCreateRequest mesaCreate)
         {
+            if (mesaCreate.NumeroMesa.Length < 1)
+                Results.BadRequest("O numero da mesa deve ter no minimo 1 caracter");
+            var mesa = new Mesa
+            {
+                Id = mesas.Count + 1,//gera o id automatico
+                NumeroMesa = mesaCreate.NumeroMesa,
+                SituacaoMesa = mesaCreate.SituacaoMesa
+            };
+            //adiciona o usuario na lista
+            mesas.Add(mesa);
+            return Results.Created($"/api/mesa/{mesa.Id}", mesa);
         }
 
         // PUT api/<MesaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IResult Put(int id, [FromBody] MesaUpdateRequest mesaUpdate)
         {
+            if(mesaUpdate.NumeroMesa.Length < 0)
+                return Results.BadRequest($"O numero da mesa{id} é invalido!");
+            
+            var mesa = mesas.FirstOrDefault(u => u.Id == id);
+            if (mesa is null)
+                return Results.NotFound($"Mesa {id} não encontrada!");
+            mesa.NumeroMesa = mesaUpdate.NumeroMesa;
+            mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
+            return Results.NoContent();
         }
 
         // DELETE api/<MesaController>/5

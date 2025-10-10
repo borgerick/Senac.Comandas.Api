@@ -1,4 +1,5 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -53,14 +54,42 @@ namespace Comandas.Api.Controllers
 
         // POST api/<CardapioItemController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IResult Post([FromBody] CardapioItemCreateRequest cardapioCreate)
         {
+            if (cardapioCreate.Descricao.Length < 3)
+                Results.BadRequest("A descrição deve ter no minimo 3 caracteres");
+            if (cardapioCreate.Preco <= 0)
+                Results.BadRequest("O preço deve ser maior que zero");
+            var cardapioItem = new CardapioItem
+            {
+                Id = cardapios.Count + 1,
+                Descricao = cardapioCreate.Descricao,
+                Preco = cardapioCreate.Preco,
+                PossuiPreparo = cardapioCreate.PossuiPreparo
+            };
+            cardapios.Add(cardapioItem);
+            return Results.Ok(cardapioItem);
         }
 
         // PUT api/<CardapioItemController>/5
+        /// <summary>
+        /// Atualiza um item do cardápio
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cardapioUpdate"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IResult Put(int id, [FromBody] CardapioItemUpdateRequest cardapioUpdate)
         {
+            var cardapio = cardapios.
+                FirstOrDefault(c => c.Id == id);
+            if (cardapio is null)
+                return Results.NotFound("Cardápio não encontrado");
+            //cardapio.Titulo = cardapioUpdate.Titulo;
+            cardapio.Descricao = cardapioUpdate.Descricao;
+            cardapio.Preco = cardapioUpdate.Preco;
+            cardapio.PossuiPreparo = cardapioUpdate.PossuiPreparo;
+            return Results.NotFound();
         }
 
         // DELETE api/<CardapioItemController>/5
