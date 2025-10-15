@@ -15,12 +15,30 @@ namespace Comandas.Api.Controllers
             new PedidoCozinha
             {
                 Id = 1,
-                ComandaId = 1,
+                ComandaItemIdComandaId = 1,
+                Itens = new List<PedidoCozinhaItem>
+                {
+                    new PedidoCozinhaItem
+                    {
+                        Id = 1,
+                        PedidoCozinhaId = 1,
+                        ComandaItemId = 1,
+                    }
+                }
             },
             new PedidoCozinha
             {
                 Id = 2,
-                ComandaId = 2,
+                ComandaItemIdComandaId = 2,
+                Itens = new List<PedidoCozinhaItem>
+                {
+                    new PedidoCozinhaItem
+                    {
+                        Id = 2,
+                        PedidoCozinhaId = 2,
+                        ComandaItemId = 2,
+                    }
+                }
             },
         };
         // GET: api/<PedidoCozinhaController>
@@ -51,6 +69,14 @@ namespace Comandas.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] PedidoCozinhaUpdateRequest pedidoCozinhaUpdate)
         {
+            if (pedidoCozinhaUpdate.Id <= 0)
+                return Results.BadRequest("O id da comanda deve ser maior que zero");
+            var pedidoCozinha = pedidosCozinhas.
+                FirstOrDefault(u => u.Id == id);
+            if (pedidoCozinha is null)
+                return Results.NotFound("Pedido de cozinha nao encontrado");
+            pedidoCozinha.ComandaId = pedidoCozinhaUpdate.ComandaId;
+            return Results.NoContent();
 
         }
 
