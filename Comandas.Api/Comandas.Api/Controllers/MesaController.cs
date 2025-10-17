@@ -76,8 +76,17 @@ namespace Comandas.Api.Controllers
 
         // DELETE api/<MesaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var mesa = mesas.
+                FirstOrDefault(u => u.Id == id);
+            if (mesa is null)
+                return Results.NotFound($"Mesa {id} não encontrada!");
+            var removidoComSucessoMesa =  mesas.Remove(mesa);
+            if(removidoComSucessoMesa)
+            return Results.NoContent();
+
+            return Results.StatusCode(500);
         }
     }
 }

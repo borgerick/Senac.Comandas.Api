@@ -105,22 +105,36 @@ namespace Comandas.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] ComandaUpdateRequest comandaUpdate)
         {
+            //pesquisa uma comanda na lista de comandas pelo id da comanda que veio no parametro de registro
             var comanda = comandas.FirstOrDefault(u => u.Id == id);
-            if (comanda is null)
+            if (comanda is null) // se não encontrou a comanda pesquisada
                 return Results.NotFound("Comanda nao encontrada");
-            if(comandaUpdate.NomeCliente.Length < 3)
+            // valida os dados da comanda
+            if (comandaUpdate.NomeCliente.Length < 3)
                 return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
+            // valida os numero da mesa
             if (comandaUpdate.NumeroMesa <= 0)
                 return Results.BadRequest("O numero da mesa deve ser maior que zero");
+            // atualiza as infomações da comanda
             comanda.NomeCliente = comandaUpdate.NomeCliente;
             comanda.NumeroMesa = comandaUpdate.NumeroMesa;
+            // retorna 204 sem conteudo
             return Results.NoContent();
         }
 
         // DELETE api/<ComandaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var comanda = comandas.
+                FirstOrDefault(u => u.Id == id);
+            if (comanda is null)
+                return Results.NotFound("Comanda nao encontrada");
+            var removidoComSucessoComanda = comandas.Remove(comanda);
+            if(removidoComSucessoComanda)
+            return Results.NoContent();
+
+            return Results.StatusCode(500);
         }
     }
 }

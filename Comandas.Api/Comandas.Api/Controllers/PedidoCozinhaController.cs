@@ -10,7 +10,7 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class PedidoCozinhaController : ControllerBase
     {
-        List<PedidoCozinha> pedidosCozinhas = new List<PedidoCozinha>()
+        static List<PedidoCozinha> pedidosCozinhas = new List<PedidoCozinha>()
         {
             new PedidoCozinha
             {
@@ -61,29 +61,38 @@ namespace Comandas.Api.Controllers
 
         // POST api/<PedidoCozinhaController>
         [HttpPost]
-        public IResult Post([FromBody] PedidoCozinhaCreateRequest pedidoCozinhaCreate)
-        {
-        }
+        //public IResult Post([FromBody] PedidoCozinhaCreateRequest pedidoCozinhaCreate)
+        //{
+        //}
 
         // PUT api/<PedidoCozinhaController>/5
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] PedidoCozinhaUpdateRequest pedidoCozinhaUpdate)
         {
-            if (pedidoCozinhaUpdate.Id <= 0)
+            if (id <= 0)
                 return Results.BadRequest("O id da comanda deve ser maior que zero");
             var pedidoCozinha = pedidosCozinhas.
                 FirstOrDefault(u => u.Id == id);
             if (pedidoCozinha is null)
                 return Results.NotFound("Pedido de cozinha nao encontrado");
-            pedidoCozinha.ComandaId = pedidoCozinhaUpdate.ComandaId;
+            
             return Results.NoContent();
 
         }
 
         // DELETE api/<PedidoCozinhaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var pedidoCozinha = pedidosCozinhas.
+                FirstOrDefault(u => u.Id == id);
+            if (pedidoCozinha is null)
+                return Results.NotFound("Pedido de cozinha nao encontrado");
+            var removidoComSucessoPedido = pedidosCozinhas.Remove(pedidoCozinha);
+            if (removidoComSucessoPedido)
+            return Results.NoContent();
+
+            return Results.StatusCode(500);
         }
     }
 }

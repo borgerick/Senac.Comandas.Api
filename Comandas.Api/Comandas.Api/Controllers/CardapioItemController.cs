@@ -94,8 +94,20 @@ namespace Comandas.Api.Controllers
 
         // DELETE api/<CardapioItemController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            // buscar o cardapio na lista
+            var cardapioItem = cardapios.FirstOrDefault(c => c.Id == id);
+            // se estiver nulo, retorna 404
+            if (cardapioItem is null)
+                return Results.NotFound($"Cardápio {id} não encontrado!");
+            // remove o objeto cardpio da lista.
+            var removidoComSucesso = cardapios.Remove(cardapioItem);
+            // retorna 204 - No Content
+            if (removidoComSucesso)
+            return Results.NoContent();
+
+            return Results.StatusCode(500);
         }
     }
 }
