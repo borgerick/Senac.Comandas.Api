@@ -10,43 +10,17 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class ComandaController : ControllerBase
     {
-        static List<Comanda> comandas = new List<Comanda>()
+        public ComandasDbContext _context;
+        public ComandaController(ComandasDbContext context)
         {
-            new Comanda
-            {
-                Id = 1,
-                NomeCliente = "Maria Silva",
-                NumeroMesa = 1,
-                Itens = new List<ComandaItem>
-                {
-                    new ComandaItem
-                    {
-                        Id = 1,
-                        CardapioItemId = 1,
-                        ComandaId = 1,
-                    }
-                }
-            },
-            new Comanda
-            {
-                Id = 2,
-                NomeCliente = "Eduardo Borges",
-                NumeroMesa = 2,
-                Itens = new List<ComandaItem>
-                {
-                    new ComandaItem
-                    {
-                        Id = 2,
-                        CardapioItemId = 2,
-                        ComandaId = 2,
-                    }
-                }
-            },
-        };
+            _context = context;
+        }
+
         // GET: api/<ComandaController>
         [HttpGet]
         public IResult Get()//Esse get retorna todos os usuarios
         {
+            var comandas = _context.Comandas.ToList();
             return Results.Ok(comandas);
         }
 
@@ -54,7 +28,7 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)//Esse get retorna um usuario pelo id
         {
-            var comanda = comandas.
+            var comanda = _context.Comandas.
                 FirstOrDefault(u => u.Id == id);
             if (comanda is null)
                 return Results.NotFound("Comanda nao encontrada");
@@ -74,11 +48,10 @@ namespace Comandas.Api.Controllers
 
                 var novaComanda = new Comanda
                 {
-                    Id = comandas.Count + 1,//gera o id automatico
                     NomeCliente = comandaCreate.NomeCliente,
                     NumeroMesa = comandaCreate.NumeroMesa,
                 };
-            //cria a lista de itens da comanda
+                //cria a lista de itens da comanda
             var comandaItens = new List<ComandaItem>();
             //percorre os ids dos itens do cardapio
             foreach (int cardapioItemId in comandaCreate.CardapioItemIds)
@@ -96,7 +69,7 @@ namespace Comandas.Api.Controllers
             //atribui os itens a nova comanda
             novaComanda.Itens = comandaItens;
             //adiciona o usuario na lista
-            comandas.Add(novaComanda);
+            _context.Comandas.Add(novaComanda);
             return Results.Created($"/api/usuario/{novaComanda.Id}", novaComanda);
             }
         
@@ -106,7 +79,7 @@ namespace Comandas.Api.Controllers
         public IResult Put(int id, [FromBody] ComandaUpdateRequest comandaUpdate)
         {
             //pesquisa uma comanda na lista de comandas pelo id da comanda que veio no parametro de registro
-            var comanda = comandas.FirstOrDefault(u => u.Id == id);
+            var comanda = _context.Comandas.FirstOrDefault(u => u.Id == id);
             if (comanda is null) // se não encontrou a comanda pesquisada
                 return Results.NotFound("Comanda nao encontrada");
             // valida os dados da comanda
@@ -126,14 +99,18 @@ namespace Comandas.Api.Controllers
         [HttpDelete("{id}")]
         public IResult Delete(int id)
         {
-            var comanda = comandas.
-                FirstOrDefault(u => u.Id == id);
+            var comanda = _context.Comandas.FirstOrDefault(u => u.Id == id);
             if (comanda is null)
                 return Results.NotFound("Comanda nao encontrada");
-            var removidoComSucessoComanda = comandas.Remove(comanda);
-            if(removidoComSucessoComanda)
-            return Results.NoContent();
-
+            
+            var removidoComSucessoComanda = _context.Comandas.Remove(comanda);
+            
+            _context.Comandas.Remove(comanda);
+            var removido = _context.SaveChanges();
+            if (removido > 0)
+            {
+                return Results.NoContent();
+            }
             return Results.StatusCode(500);
         }
     }

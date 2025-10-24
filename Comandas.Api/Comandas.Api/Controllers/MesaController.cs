@@ -10,24 +10,17 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class MesaController : ControllerBase
     {
-        List<Mesa> mesas = new List<Mesa>(){
-        new Mesa
+        public ComandasDbContext _context;
+        public MesaController(ComandasDbContext context) 
         {
-                Id = 1,
-                NumeroMesa = "1",
-                SituacaoMesa = true,
-        },
-        new Mesa
-        {
-                Id = 1,
-                NumeroMesa = "1",
-                SituacaoMesa = true,
-        },
-    };
+            _context = context;
+        }
+        
         // GET: api/<MesaController>
         [HttpGet]
         public IResult Get()
         {
+            var mesas = _context.Mesas.ToList();
             return Results.Ok(mesas);
         }
 
@@ -35,7 +28,7 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var mesa = mesas.
+            var mesa = _context.Mesas.
                 FirstOrDefault(u => u.Id == id);
             if (mesa is null)
                 return Results.NotFound("Mesa nao encontrada");
@@ -50,12 +43,12 @@ namespace Comandas.Api.Controllers
                 Results.BadRequest("O numero da mesa deve ter no minimo 1 caracter");
             var mesa = new Mesa
             {
-                Id = mesas.Count + 1,//gera o id automatico
                 NumeroMesa = mesaCreate.NumeroMesa,
                 SituacaoMesa = mesaCreate.SituacaoMesa
             };
             //adiciona o usuario na lista
-            mesas.Add(mesa);
+            _context.Mesas.Add(mesa);
+            _context.SaveChanges();
             return Results.Created($"/api/mesa/{mesa.Id}", mesa);
         }
 
