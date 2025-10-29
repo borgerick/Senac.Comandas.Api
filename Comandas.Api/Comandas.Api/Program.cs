@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ComandasDbContext>(options =>
-    options.UseInMemoryDatabase("ComandaDb")
+    options.UseSqlite("Data Source=comandas.db")
     //options.UseSqlServer("") // Connection string can be added here
     );
 

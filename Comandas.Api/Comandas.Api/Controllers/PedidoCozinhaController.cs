@@ -10,41 +10,16 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class PedidoCozinhaController : ControllerBase
     {
-        static List<PedidoCozinha> pedidosCozinhas = new List<PedidoCozinha>()
+       public ComandasDbContext _context;
+        public PedidoCozinhaController(ComandasDbContext context)
         {
-            new PedidoCozinha
-            {
-                Id = 1,
-                ComandaItemIdComandaId = 1,
-                Itens = new List<PedidoCozinhaItem>
-                {
-                    new PedidoCozinhaItem
-                    {
-                        Id = 1,
-                        PedidoCozinhaId = 1,
-                        ComandaItemId = 1,
-                    }
-                }
-            },
-            new PedidoCozinha
-            {
-                Id = 2,
-                ComandaItemIdComandaId = 2,
-                Itens = new List<PedidoCozinhaItem>
-                {
-                    new PedidoCozinhaItem
-                    {
-                        Id = 2,
-                        PedidoCozinhaId = 2,
-                        ComandaItemId = 2,
-                    }
-                }
-            },
-        };
+            _context = context;
+        }
         // GET: api/<PedidoCozinhaController>
         [HttpGet]
         public IResult Get()
         {
+            var pedidosCozinhas = _context.PedidoCozinhas.ToList();
             return Results.Ok(pedidosCozinhas);
         }
 
@@ -52,7 +27,7 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var pedidoCozinha = pedidosCozinhas.
+            var pedidoCozinha = _context.PedidoCozinhas.
                 FirstOrDefault(u => u.Id == id);
             if (pedidoCozinha is null)
                 return Results.NotFound("Pedido de cozinha nao encontrado");
@@ -71,7 +46,7 @@ namespace Comandas.Api.Controllers
         {
             if (id <= 0)
                 return Results.BadRequest("O id da comanda deve ser maior que zero");
-            var pedidoCozinha = pedidosCozinhas.
+            var pedidoCozinha = _context.PedidoCozinhas.
                 FirstOrDefault(u => u.Id == id);
             if (pedidoCozinha is null)
                 return Results.NotFound("Pedido de cozinha nao encontrado");
@@ -84,14 +59,18 @@ namespace Comandas.Api.Controllers
         [HttpDelete("{id}")]
         public IResult Delete(int id)
         {
-            var pedidoCozinha = pedidosCozinhas.
-                FirstOrDefault(u => u.Id == id);
+            var pedidoCozinha = _context.PedidoCozinhas.FirstOrDefault(u => u.Id == id);
             if (pedidoCozinha is null)
                 return Results.NotFound("Pedido de cozinha nao encontrado");
-            var removidoComSucessoPedido = pedidosCozinhas.Remove(pedidoCozinha);
-            if (removidoComSucessoPedido)
-            return Results.NoContent();
-
+            
+            var removidoComSucessoPedido = _context.PedidoCozinhas.Remove(pedidoCozinha);
+            
+            _context.PedidoCozinhas.Remove(pedidoCozinha);
+            var removido = _context.SaveChanges();
+            if (removido > 0)
+            {
+                return Results.NoContent();
+            }
             return Results.StatusCode(500);
         }
     }

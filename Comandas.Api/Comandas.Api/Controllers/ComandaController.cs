@@ -59,12 +59,15 @@ namespace Comandas.Api.Controllers
                 //cria um novo item da comanda
                 var comandaItem = new ComandaItem
                 {
-                    Id = comandaItens.Count + 1,
                     CardapioItemId = cardapioItemId,
-                    ComandaId = novaComanda.Id,
+                    Comanda = novaComanda,
                 };
                 //adiciona o item na lista de itens da comanda
                 comandaItens.Add(comandaItem);
+
+                // Criar o pedido de cozinha e o item de acordo com cadastro do cardapio possuipreparo
+                var cardapioItem = _context.CardapioItems.FirstOrDefault(c => c.Id == cardapioItemId);
+                
             }
             //atribui os itens a nova comanda
             novaComanda.Itens = comandaItens;

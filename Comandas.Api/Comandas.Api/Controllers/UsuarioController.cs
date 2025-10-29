@@ -12,7 +12,6 @@ namespace Comandas.Api.Controllers
     {
         // Variavel que representa o banco de dados
         public ComandasDbContext _context;
-
         public UsuarioController(ComandasDbContext context)
         {
             _context = context;

@@ -11,7 +11,6 @@ namespace Comandas.Api.Controllers
     public class CardapioItemController : ControllerBase // herda de ControllerBase para poder responder requisições HTTP
     {
         private readonly ComandasDbContext _context;
-
         public CardapioItemController(ComandasDbContext context)
         {
             _context = context;
@@ -36,14 +35,11 @@ namespace Comandas.Api.Controllers
             var cardapio = _context.CardapioItems.
                 FirstOrDefault(c => c.Id == id);
             if (cardapio == null)
-            {
                 //se nao encontrar o cardapio com o id, retorna 404
                 return Results.NotFound("Cardápio não encontrado!");
-            }
-            //retorna o valor para o endpoint da api
+               //retorna o valor para o endpoint da api
             return Results.Ok(cardapio);
-            
-        }
+         }
 
         // POST api/<CardapioItemController>
         [HttpPost]
