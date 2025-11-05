@@ -9,6 +9,8 @@ namespace Comandas.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int PedidoCozinhaId { get; set; }
+        public PedidoCozinha PedidoCozinha { get; set; }
         public int ComandaItemId { get; set; }
+        public ComandaItem ComandaItem { get; set; }
     }
 }

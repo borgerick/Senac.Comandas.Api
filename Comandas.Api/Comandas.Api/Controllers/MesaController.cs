@@ -43,7 +43,7 @@ namespace Comandas.Api.Controllers
             var mesa = new Mesa
             {
                 NumeroMesa = mesaCreate.NumeroMesa,
-                SituacaoMesa = mesaCreate.SituacaoMesa
+                //SituacaoMesa = mesaCreate.SituacaoMesa
             };
             //adiciona o usuario na lista
             _context.Mesas.Add(mesa);
@@ -57,15 +57,15 @@ namespace Comandas.Api.Controllers
         {
             if(mesaUpdate.NumeroMesa.Length <= 0)
                 return Results.BadRequest("O numero da mesa deve ser maior que zero");
-            if(mesaUpdate.SituacaoMesa < 0 || mesaUpdate.SituacaoMesa > 2)
-                return Results.BadRequest("A situacao da mesa deve ser 0 (Livre), 1 (Ocupada) ou 2 (Reservada).");
+            //if(mesaUpdate.SituacaoMesa < 0 || mesaUpdate.SituacaoMesa > 2)
+           //     return Results.BadRequest("A situacao da mesa deve ser 0 (Livre), 1 (Ocupada) ou 2 (Reservada).");
 
             var mesa = _context.Mesas.FirstOrDefault(u => u.Id == id);
             if (mesa is null)
                 return Results.BadRequest($"O numero da mesa{id} é invalido!");
 
             mesa.NumeroMesa = mesaUpdate.NumeroMesa;
-            mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
+           // mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
             _context.SaveChanges();
             return Results.NoContent();
         }

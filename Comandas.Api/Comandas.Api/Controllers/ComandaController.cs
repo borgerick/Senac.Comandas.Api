@@ -39,19 +39,19 @@ namespace Comandas.Api.Controllers
         [HttpPost]
         public IResult Post([FromBody] ComandaCreateRequest comandaCreate)
         {
-                if (comandaCreate.NomeCliente.Length < 3)
-                    return Results.BadRequest("A senha deve ter no minimo 6 caracteres");
-                if (comandaCreate.NumeroMesa <= 0)
-                    return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
-                if (comandaCreate.CardapioItemIds.Length == 0) ;
-                return Results.BadRequest("O email deve ser valido.");
+            if (comandaCreate.NomeCliente.Length < 3)
+                return Results.BadRequest("A senha deve ter no minimo 6 caracteres");
+            if (comandaCreate.NumeroMesa <= 0)
+                return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
+            if (comandaCreate.CardapioItemIds.Length == 0) ;
+            return Results.BadRequest("O email deve ser valido.");
 
-                var novaComanda = new Comanda
-                {
-                    NomeCliente = comandaCreate.NomeCliente,
-                    NumeroMesa = comandaCreate.NumeroMesa,
-                };
-                //cria a lista de itens da comanda
+            var novaComanda = new Comanda
+            {
+                NomeCliente = comandaCreate.NomeCliente,
+                NumeroMesa = comandaCreate.NumeroMesa,
+            };
+            //cria a lista de itens da comanda
             var comandaItens = new List<ComandaItem>();
             //percorre os ids dos itens do cardapio
             foreach (int cardapioItemId in comandaCreate.CardapioItemIds)
@@ -65,16 +65,29 @@ namespace Comandas.Api.Controllers
                 //adiciona o item na lista de itens da comanda
                 comandaItens.Add(comandaItem);
 
-                // Criar o pedido de cozinha e o item de acordo com cadastro do cardapio possuipreparo
-                var cardapioItem = _context.CardapioItems.FirstOrDefault(c => c.Id == cardapioItemId);
-                
+                var cardapioItem = _context.CardapioItems
+                    .FirstOrDefault(c => c.Id == cardapioItemId);
+                if (cardapioItem!.PossuiPreparo)
+                {
+                    var pedido = new PedidoCozinha
+                    {
+                        Comanda = novaComanda
+                    };
+                    var pedidoItem = new PedidoCozinhaItem
+                    {
+                        ComandaItem = comandaItem,
+                        PedidoCozinha = pedido
+                    };
+                    _context.PedidoCozinhas.Add(pedido);
+                    _context.PedidoCozinhaItens.Add(pedidoItem);
+                }
+                novaComanda.Itens.Add(comandaItem);
+                _context.Comandas.Add(novaComanda);
+                _context.SaveChanges();
+                return Results.Created($"/api/comanda/{novaComanda.Id}", novaComanda);
+
             }
-            //atribui os itens a nova comanda
-            novaComanda.Itens = comandaItens;
-            //adiciona o usuario na lista
-            _context.Comandas.Add(novaComanda);
-            return Results.Created($"/api/usuario/{novaComanda.Id}", novaComanda);
-            }
+        }
         
 
         // PUT api/<ComandaController>/5
