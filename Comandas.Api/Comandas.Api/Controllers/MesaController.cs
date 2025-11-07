@@ -38,7 +38,7 @@ namespace Comandas.Api.Controllers
         [HttpPost]
         public IResult Post([FromBody] MesaCreateRequest mesaCreate)
         {
-            if (mesaCreate.NumeroMesa.Length < 1)
+            if (mesaCreate.NumeroMesa < 1)
                 Results.BadRequest("O numero da mesa deve ter no minimo 1 caracter");
             var mesa = new Mesa
             {
@@ -55,7 +55,7 @@ namespace Comandas.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] MesaUpdateRequest mesaUpdate)
         {
-            if(mesaUpdate.NumeroMesa.Length <= 0)
+            if(mesaUpdate.NumeroMesa <= 0)
                 return Results.BadRequest("O numero da mesa deve ser maior que zero");
             //if(mesaUpdate.SituacaoMesa < 0 || mesaUpdate.SituacaoMesa > 2)
            //     return Results.BadRequest("A situacao da mesa deve ser 0 (Livre), 1 (Ocupada) ou 2 (Reservada).");

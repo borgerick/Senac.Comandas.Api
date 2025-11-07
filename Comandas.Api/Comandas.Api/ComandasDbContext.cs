@@ -24,15 +24,21 @@ public class ComandasDbContext : DbContext
             new Models.Mesa()
             {
                 Id = 1,
-                NumeroMesa = "1",
+                NumeroMesa = 1,
                 SituacaoMesa = 2
             }, new Models.Mesa()
             {
                 Id = 2,
-                NumeroMesa = "2",
+                NumeroMesa = 2,
                 SituacaoMesa = 1
+            }, new Models.Mesa()
+            {
+                Id = 3,
+                NumeroMesa = 2,
+                SituacaoMesa = 2
             }
             );
+
         modelBuilder.Entity<Models.CardapioItem>()
             .HasData(
             new Models.CardapioItem()
@@ -50,8 +56,17 @@ public class ComandasDbContext : DbContext
                 Descricao = "Refrigerante em lata 350ml",
                 Preco = 5.00m,
                 PossuiPreparo = false
+            },
+            new Models.CardapioItem()
+            {
+                Id =3 ,
+                Titulo = "Torrada Simples",
+                Descricao = "Pão, presunto e queijo",
+                Preco = 4.00m,
+                PossuiPreparo = false
             }
             );
+
         base.OnModelCreating(modelBuilder);
     }
     public DbSet<Models.Usuario> Usuarios { get; set; } = default!;

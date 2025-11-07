@@ -8,7 +8,7 @@ namespace Comandas.Api.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string NumeroMesa { get; set; }
+        public int NumeroMesa { get; set; }
         public int SituacaoMesa { get; set; }
     }
 }

@@ -40,13 +40,14 @@ namespace Comandas.Api.Controllers
         public IResult Post([FromBody] ComandaCreateRequest comandaCreate)
         {
             if (comandaCreate.NomeCliente.Length < 3)
-                return Results.BadRequest("A senha deve ter no minimo 6 caracteres");
+                return Results.BadRequest("A senha deve ter no minimo 3 caracteres");
             if (comandaCreate.NumeroMesa <= 0)
-                return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
-            if (comandaCreate.CardapioItemIds.Length == 0) ;
-            return Results.BadRequest("O email deve ser valido.");
+                return Results.BadRequest("O numeor da mesa tem que ser maior que zero.");
+            if (comandaCreate.CardapioItemIds.Length <= 0)
+            return Results.BadRequest("A comanda deve ter pelo menos um item do cardápio.");
 
-            var novaComanda = new Comanda
+
+            var novaComanda = new Models.Comanda
             {
                 NomeCliente = comandaCreate.NomeCliente,
                 NumeroMesa = comandaCreate.NumeroMesa,
@@ -84,11 +85,25 @@ namespace Comandas.Api.Controllers
                 novaComanda.Itens.Add(comandaItem);
                 _context.Comandas.Add(novaComanda);
                 _context.SaveChanges();
-                return Results.Created($"/api/comanda/{novaComanda.Id}", novaComanda);
+
+                var resposta  = new ComandaCreateResponse
+                {
+                    Id = novaComanda.Id,
+                    NomeCliente = novaComanda.NomeCliente,
+                    NumeroMesa = novaComanda.NumeroMesa,
+                    Itens = novaComanda.Itens.Select(i => new ComandaItemResponse
+                    {
+                        Id = i.Id,
+                        Titulo = _context.CardapioItems.FirstOrDefault(c => c.Id == i.CardapioItemId).Titulo
+                    }).ToList()
+                };
+                return Results.Created($"/api/comanda/{resposta.Id}", resposta);
 
             }
+            return Results.Problem("Erro inesperado ao criar a comanda.");
+
         }
-        
+
 
         // PUT api/<ComandaController>/5
         [HttpPut("{id}")]
