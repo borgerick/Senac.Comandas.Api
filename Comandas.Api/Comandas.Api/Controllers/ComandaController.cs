@@ -97,7 +97,7 @@ namespace Comandas.Api.Controllers
                         Titulo = _context.CardapioItems.FirstOrDefault(c => c.Id == i.CardapioItemId).Titulo
                     }).ToList()
                 };
-                return Results.Created($"/api/comanda/{resposta.Id}", resposta);
+               return Results.Created($"/api/comanda/{resposta.Id}", resposta);
 
             }
             return Results.Problem("Erro inesperado ao criar a comanda.");
@@ -113,17 +113,50 @@ namespace Comandas.Api.Controllers
             var comanda = _context.Comandas.FirstOrDefault(u => u.Id == id);
             if (comanda is null) // se não encontrou a comanda pesquisada
                 return Results.NotFound("Comanda nao encontrada");
-            // valida os dados da comanda
             if (comandaUpdate.NomeCliente.Length < 3)
                 return Results.BadRequest("O nome deve ter no minimo 3 caracteres");
-            // valida os numero da mesa
             if (comandaUpdate.NumeroMesa <= 0)
                 return Results.BadRequest("O numero da mesa deve ser maior que zero");
-            // atualiza as infomações da comanda
+
             comanda.NomeCliente = comandaUpdate.NomeCliente;
             comanda.NumeroMesa = comandaUpdate.NumeroMesa;
-            // retorna 204 sem conteudo
+
+            // percorrendo a lisra de itens
+            foreach (var item in comandaUpdate.Itens)
+            {
+                //se o id for informado e remover for verdadeiro
+                if (item.id > 0 && item.Remove == true)
+                {
+                    RemoverItemComanda(item.id);
+                }
+                if (item.CardapioItemId > 0)
+                {
+                    InserirItemComanda(comanda, item.CardapioItemId);
+                }
+            }
+
+            _context.SaveChanges();
+
             return Results.NoContent();
+        }
+
+        private void InserirItemComanda(Comanda comanda, int cardapioItemId)
+        {
+            _context.ComandaItens.Add(
+            new ComandaItem
+            {
+                CardapioItemId = cardapioItemId,
+                Comanda = comanda
+            }
+          );
+        }
+
+        private void RemoverItemComanda(int id)
+        {
+            //consulta o item da comanda pelo id
+            var comandaItem = _context.ComandaItens.FirstOrDefault(ci => ci.Id == id);
+            if (comandaItem is null)
+                _context.ComandaItens.Remove(comandaItem);
         }
 
         // DELETE api/<ComandaController>/5
