@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Comandas.Api;
 public class ComandasDbContext : DbContext
@@ -77,4 +78,5 @@ public class ComandasDbContext : DbContext
     public DbSet<Models.PedidoCozinha> PedidoCozinhas { get; set; } = default!;
     public DbSet<Models.PedidoCozinhaItem> PedidoCozinhaItens { get; set; } = default!;
     public DbSet<Models.CardapioItem> CardapioItems { get; set; } = default!;
+    public object CategoriaCardapio { get; internal set; }
 }
