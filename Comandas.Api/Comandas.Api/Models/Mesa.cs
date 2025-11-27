@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comandas.Api.Models
@@ -11,10 +12,11 @@ namespace Comandas.Api.Models
         public int NumeroMesa { get; set; }
         public int SituacaoMesa { get; set; }
     }
+
     public enum SituacaoMesa
     {
         Livre = 0,
-        Reservada = 1,
-        Ocupada = 2
+        Ocupada = 1,
+        Reservada = 2
     }
 }

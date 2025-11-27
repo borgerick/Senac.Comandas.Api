@@ -1,4 +1,5 @@
-﻿namespace Comandas.Api.DTOs
+﻿
+namespace Comandas.Api.DTOs
 {
     public class ComandaCreateResponse
     {
@@ -6,12 +7,10 @@
         public int NumeroMesa { get; set; }
         public string NomeCliente { get; set; } = default!;
         public List<ComandaItemResponse> Itens { get; set; } = new List<ComandaItemResponse>();
-     }
-
-        public class ComandaItemResponse
-        {
-            public int Id { get; set; }
-            public string Titulo { get; set; } = default!;
-        }
     }
-
+    public class ComandaItemResponse
+    {
+        public int Id { get; set; }
+        public string Titulo { get; set; } = default!;
+    }
+}

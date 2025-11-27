@@ -1,8 +1,9 @@
-﻿namespace Comandas.Api.DTOs
+﻿
+namespace Comandas.Api.DTOs
 {
     public class MesaCreateRequest
     {
         public int NumeroMesa { get; set; }
-        public bool SituacaoMesa { get; set; }
+        public int SituacaoMesa { get; set; }
     }
 }

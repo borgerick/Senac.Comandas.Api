@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Comandas.Api.Models
+namespace Comandas.Api.Models;
+
+public class PedidoCozinhaItem
 {
-    public class PedidoCozinhaItem
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public int PedidoCozinhaId { get; set; }
-        public PedidoCozinha PedidoCozinha { get; set; }
-        public int ComandaItemId { get; set; }
-        public ComandaItem ComandaItem { get; set; }
-    }
+    [Key] // PK
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    public int PedidoCozinhaId { get; set; } // FK
+    public virtual PedidoCozinha PedidoCozinha { get; set; } // Navegação
+    public int ComandaItemId { get; set; } // FK
+    public virtual ComandaItem ComandaItem { get; set; } // Navegação
 }

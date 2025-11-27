@@ -1,87 +1,89 @@
 ﻿using Comandas.Api.DTOs;
 using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+namespace Comandas.Api.Controllers;
 
-namespace Comandas.Api.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class MesaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MesaController : ControllerBase
+    private readonly ComandasDbContext _context;
+
+    public MesaController(ComandasDbContext context)
     {
-        public ComandasDbContext _context;
-        public MesaController(ComandasDbContext context) 
+        _context = context;
+    }
+
+    [HttpGet]
+    public IResult Get()
+    {
+        return Results.Ok(_context.Mesas.ToList());
+    }
+
+
+    [HttpGet("{id}")]
+    public IResult Get(int id)
+    {
+        var mesa = _context.Mesas.FirstOrDefault(m => m.Id == id);
+        if (mesa is null)
         {
-            _context = context;
+            return Results.NotFound("Mesa não encontrada!");
         }
-        
-        // GET: api/<MesaController>
-        [HttpGet]
-        public IResult Get()
+        return Results.Ok(mesa);
+    }
+
+    // POST api/<MesaController>
+    [HttpPost]
+    public IResult Post([FromBody] MesaCreateRequest mesaCreate)
+    {
+        // valida se o numero da mesa é maior que zero
+        if (mesaCreate.NumeroMesa <= 0)
+            return Results.BadRequest("O número da mesa deve ser maior que zero.");
+        // cria uma nova mesa
+        var novaMesa = new Mesa
         {
-            return Results.Ok(_context.Mesas.ToList());
-        }
+            NumeroMesa = mesaCreate.NumeroMesa,
+            SituacaoMesa = (int)SituacaoMesa.Livre
+        };
+        // adiciona a nova mesa na lista
+        _context.Mesas.Add(novaMesa);
+        // salva a mesa no banco de dados
+        _context.SaveChanges();
+        // retorna a nova mesa criada e o codigo 201 CREATED
+        return Results.Created($"/api/mesa/{novaMesa.Id}", novaMesa);
+    }
 
-        // GET api/<MesaController>/5
-        [HttpGet("{id}")]
-        public IResult Get(int id)
-        {
-            var mesa = _context.Mesas.FirstOrDefault(u => u.Id == id);
-            if (mesa is null)
-                return Results.NotFound("Mesa nao encontrada");
-            return Results.Ok(mesa);
-        }
+    // PUT api/<MesaController>/5
+    [HttpPut("{id}")]
+    public IResult Put(int id, [FromBody] MesaUpdateRequest mesaUpdate)
+    {
+        if (mesaUpdate.NumeroMesa <= 0)
+            return Results.BadRequest("O número da mesa deve ser maior que zero.");
+        if (mesaUpdate.SituacaoMesa < 0 || mesaUpdate.SituacaoMesa > 2)
+            return Results.BadRequest("A situação da mesa deve ser 0 (Livre), " +
+                "1 (Ocupada) ou 2 (Reservada).");
 
-        // POST api/<MesaController>
-        [HttpPost]
-        public IResult Post([FromBody] MesaCreateRequest mesaCreate)
-        {
-            if (mesaCreate.NumeroMesa < 1)
-                Results.BadRequest("O numero da mesa deve ter no minimo 1 caracter");
-            var mesa = new Mesa
-            {
-                NumeroMesa = mesaCreate.NumeroMesa,
-                //SituacaoMesa = mesaCreate.SituacaoMesa
-            };
-            //adiciona o usuario na lista
-            _context.Mesas.Add(mesa);
-            _context.SaveChanges();
-            return Results.Created($"/api/mesa/{mesa.Id}", mesa);
-        }
+        var mesa = _context.Mesas.FirstOrDefault(m => m.Id == id);
+        if (mesa is null)
+            return Results.NotFound($"Mesa {id} não encontrada!");
+        mesa.NumeroMesa = mesaUpdate.NumeroMesa;
+        mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
+        _context.SaveChanges();
+        return Results.NoContent();
+    }
 
-        // PUT api/<MesaController>/5
-        [HttpPut("{id}")]
-        public IResult Put(int id, [FromBody] MesaUpdateRequest mesaUpdate)
-        {
-            if(mesaUpdate.NumeroMesa <= 0)
-                return Results.BadRequest("O numero da mesa deve ser maior que zero");
-            //if(mesaUpdate.SituacaoMesa < 0 || mesaUpdate.SituacaoMesa > 2)
-           //     return Results.BadRequest("A situacao da mesa deve ser 0 (Livre), 1 (Ocupada) ou 2 (Reservada).");
-
-            var mesa = _context.Mesas.FirstOrDefault(u => u.Id == id);
-            if (mesa is null)
-                return Results.BadRequest($"O numero da mesa{id} é invalido!");
-
-            mesa.NumeroMesa = mesaUpdate.NumeroMesa;
-           // mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
-            _context.SaveChanges();
+    // DELETE api/<MesaController>/5
+    [HttpDelete("{id}")]
+    public IResult Delete(int id)
+    {
+        var mesa = _context.Mesas.FirstOrDefault(m => m.Id == id);
+        if (mesa is null)
+            return Results.NotFound($"Mesa {id} não encontrada!");
+        _context.Mesas.Remove(mesa);
+        var removidoComSucesso = _context.SaveChanges();
+        if (removidoComSucesso > 0)
             return Results.NoContent();
-        }
-
-        // DELETE api/<MesaController>/5
-        [HttpDelete("{id}")]
-        public IResult Delete(int id)
-        {
-            var mesa = _context.Mesas.FirstOrDefault(u => u.Id == id);
-            if (mesa is null)
-                return Results.NotFound($"Mesa {id} não encontrada!");
-            _context.Mesas.Remove(mesa);
-            var removidoComSucessoMesa = _context.SaveChanges();
-            if(removidoComSucessoMesa > 0)
-            return Results.NoContent();
-            return Results.StatusCode(500);
-        }
+        return Results.StatusCode(500);
     }
 }

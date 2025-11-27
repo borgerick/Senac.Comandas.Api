@@ -25,14 +25,14 @@ namespace Comandas.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoriaCardapio>>> GetCategoriaCardapio()
         {
-            return await _context.CategoriaCardapio.ToListAsync();
+            return await _context.CategoriaCardapios.ToListAsync();
         }
 
         // GET: api/CategoriaCardapios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoriaCardapio>> GetCategoriaCardapio(int id)
         {
-            var categoriaCardapio = await _context.CategoriaCardapio.FindAsync(id);
+            var categoriaCardapio = await _context.CategoriaCardapios.FindAsync(id);
 
             if (categoriaCardapio == null)
             {
@@ -78,7 +78,7 @@ namespace Comandas.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CategoriaCardapio>> PostCategoriaCardapio(CategoriaCardapio categoriaCardapio)
         {
-            _context.CategoriaCardapio.Add(categoriaCardapio);
+            _context.CategoriaCardapios.Add(categoriaCardapio);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCategoriaCardapio", new { id = categoriaCardapio.Id }, categoriaCardapio);
@@ -88,13 +88,13 @@ namespace Comandas.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategoriaCardapio(int id)
         {
-            var categoriaCardapio = await _context.CategoriaCardapio.FindAsync(id);
+            var categoriaCardapio = await _context.CategoriaCardapios.FindAsync(id);
             if (categoriaCardapio == null)
             {
                 return NotFound();
             }
 
-            _context.CategoriaCardapio.Remove(categoriaCardapio);
+            _context.CategoriaCardapios.Remove(categoriaCardapio);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace Comandas.Api.Controllers
 
         private bool CategoriaCardapioExists(int id)
         {
-            return _context.CategoriaCardapio.Any(e => e.Id == id);
+            return _context.CategoriaCardapios.Any(e => e.Id == id);
         }
     }
 }

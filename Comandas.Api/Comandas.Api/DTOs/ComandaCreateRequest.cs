@@ -1,4 +1,5 @@
-﻿namespace Comandas.Api.DTOs
+﻿
+namespace Comandas.Api.DTOs
 {
     public class ComandaCreateRequest
     {
