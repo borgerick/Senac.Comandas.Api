@@ -1,5 +1,6 @@
 ﻿using Comandas.Api.DTOs;
 using Comandas.Api.Models;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -50,6 +51,12 @@ namespace Comandas.Api.Controllers
                 return Results.BadRequest("O nome deve ter no mínimo 3 caracteres.");
             if (usuarioCreate.Email.Length < 5 || !usuarioCreate.Email.Contains("@"))
                 return Results.BadRequest("O email deve ser válido.");
+
+            var emailExistente = _context.Usuarios
+                .FirstOrDefault(u => u.Email == usuarioCreate.Email);
+            if (emailExistente is not null)
+                return Results.BadRequest("O email já está em uso.");
+
             var usuario = new Usuario
             {
                 Nome = usuarioCreate.Nome,
@@ -86,7 +93,7 @@ namespace Comandas.Api.Controllers
             usuario.Nome = usuarioUpdate.Nome;
             usuario.Email = usuarioUpdate.Email;
             usuario.Senha = usuarioUpdate.Senha;
-            // update USUarios set Nome=..., Email=..., Senha=... where Id=...
+
             _context.SaveChanges();
             //retorna no content
             return Results.NoContent();
@@ -107,6 +114,25 @@ namespace Comandas.Api.Controllers
                 return Results.NoContent();
             }
             return Results.StatusCode(500);
+        }
+
+        // criar metodo de login 
+        // POST api/usuario/login
+        // body { "email": "rafael@hotmail.com", "senha": "123" }
+        [HttpPost("login")]
+        public IResult Login([FromBody] DTOs.LoginRequest loginRequest)
+        {
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u =>
+                   u.Email == loginRequest.email
+                && u.Senha == loginRequest.senha);
+
+            // 401
+            if (usuario is null)
+                return Results.Unauthorized();
+
+            // 200
+            return Results.Ok("Usuário autenticado");
         }
     }
 }
