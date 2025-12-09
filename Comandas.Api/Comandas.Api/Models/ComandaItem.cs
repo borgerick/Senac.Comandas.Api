@@ -12,5 +12,6 @@ namespace Comandas.Api.Models
         public virtual Comanda Comanda { get; set; }
         public int CardapioItemId { get; set; }
         public CardapioItem CardapioItem { get; set; }
+        public string Titulo { get; internal set; }
     }
 }

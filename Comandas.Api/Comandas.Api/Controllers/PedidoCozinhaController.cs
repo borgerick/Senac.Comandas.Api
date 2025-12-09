@@ -1,30 +1,39 @@
 ﻿using Comandas.Api.DTOs;
-using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Comandas.Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class PedidoCozinhaController : ControllerBase
     {
-        static List<PedidoCozinha> pedidos = new List<PedidoCozinha>()
+
+        public ComandasDbContext _dbContext { get; set; }
+        public PedidoCozinhaController(ComandasDbContext dbContext)
         {
-            new PedidoCozinha
-            {
-                Id = 1,
-                ComandaId = 1,
-            },
-            new PedidoCozinha
-            {
-                Id = 2,
-                ComandaId = 2,
-            }
-        };
+            _dbContext = dbContext;
+        }
         // GET: api/<PedidoCozinhaController>
         [HttpGet]
         public IResult Get()
         {
+            var pedidos = _dbContext.PedidoCozinhas
+                .Select(p => new PedidoCozinhaResponse
+                {
+                    Id = p.Id,
+                    ComandaId = p.ComandaId,
+                    Itens = p.Itens.Select(pi => new PedidoCozinhaItemResponse
+                    {
+                        Id = pi.Id,
+                        Titulo =
+                                _dbContext.CardapioItens
+                            .First(ci => ci.Id == _dbContext.ComandaItens
+                                                    .First(ci => ci.Id == pi.ComandaItemId).CardapioItemId
+                             ).Titulo
+                    }),
+                })
+                .ToList();
             return Results.Ok(pedidos);
         }
 
@@ -32,7 +41,7 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var pedido = pedidos
+            var pedido = _dbContext.PedidoCozinhas
                 .FirstOrDefault(p => p.Id == id);
             if (pedido is null)
                 return Results.NotFound("Pedido não encontrado");
@@ -55,15 +64,14 @@ namespace Comandas.Api.Controllers
         [HttpDelete("{id}")]
         public IResult Delete(int id)
         {
-            var pedido = pedidos
+            var pedido = _dbContext.PedidoCozinhas
                 .FirstOrDefault(p => p.Id == id);
 
             if (pedido is null)
                 return Results.NotFound($"Pedido {id} não encontrado");
 
-            var removidoComSucesso = pedidos.Remove(pedido);
-            if (removidoComSucesso)
-                return Results.NoContent();
+            var removidoComSucesso = _dbContext.Remove(pedido);
+
 
             return Results.StatusCode(500);
         }

@@ -18,333 +18,333 @@ namespace Comandas.Api.Migrations
             modelBuilder.HasAnnotation("ProductVersion", "8.0.21");
 
             modelBuilder.Entity("Comandas.Api.Models.CardapioItem", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<int?>("CategoriaCardapioId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int?>("CategoriaCardapioId")
+                        .HasColumnType("INTEGER");
 
-                b.Property<string>("Descricao")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.Property<bool>("PossuiPreparo")
-                    .HasColumnType("INTEGER");
+                    b.Property<bool>("PossuiPreparo")
+                        .HasColumnType("INTEGER");
 
-                b.Property<decimal>("Preco")
-                    .HasColumnType("TEXT");
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("TEXT");
 
-                b.Property<string>("Titulo")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("CategoriaCardapioId");
+                    b.HasIndex("CategoriaCardapioId");
 
-                b.ToTable("CardapioItems");
+                    b.ToTable("CardapioItens");
 
-                b.HasData(
-                    new
-                    {
-                        Id = 1,
-                        Descricao = "XIS CARNE",
-                        PossuiPreparo = true,
-                        Preco = 25m,
-                        Titulo = "XIS CARNE"
-                    },
-                    new
-                    {
-                        Id = 2,
-                        Descricao = "COCA COLA LATA 350ML",
-                        PossuiPreparo = false,
-                        Preco = 6m,
-                        Titulo = "COCA COLA LATA 350ML"
-                    },
-                    new
-                    {
-                        Id = 3,
-                        Descricao = "TORRADA SIMPLES",
-                        PossuiPreparo = true,
-                        Preco = 8m,
-                        Titulo = "TORRADA SIMPLES"
-                    });
-            });
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descricao = "XIS DE FRANGO",
+                            PossuiPreparo = true,
+                            Preco = 23m,
+                            Titulo = "XIS DE FRANGO"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descricao = "COCA COLA LATA 500ML",
+                            PossuiPreparo = false,
+                            Preco = 4m,
+                            Titulo = "COCA COLA LATA 500ML"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descricao = "TORRADA COM OVO",
+                            PossuiPreparo = true,
+                            Preco = 6m,
+                            Titulo = "TORRADA COM OVO"
+                        });
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.CategoriaCardapio", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<string>("Descricao")
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Descricao")
+                        .HasColumnType("TEXT");
 
-                b.Property<string>("Nome")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("CategoriaCardapio");
+                    b.ToTable("CategoriaCardapios");
 
-                b.HasData(
-                    new
-                    {
-                        Id = 1,
-                        Nome = "Lanches"
-                    },
-                    new
-                    {
-                        Id = 2,
-                        Nome = "Bebidas"
-                    },
-                    new
-                    {
-                        Id = 3,
-                        Nome = "Acompanhamentos"
-                    });
-            });
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Lanches"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "Bebidas"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nome = "Acompanhamentos"
+                        });
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.Comanda", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<string>("NomeCliente")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("NomeCliente")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.Property<int>("NumeroMesa")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("NumeroMesa")
+                        .HasColumnType("INTEGER");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Comandas");
-            });
+                    b.ToTable("Comandas");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.ComandaItem", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("CardapioItemId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("CardapioItemId")
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("ComandaId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("ComandaId")
+                        .HasColumnType("INTEGER");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("CardapioItemId");
+                    b.HasIndex("CardapioItemId");
 
-                b.HasIndex("ComandaId");
+                    b.HasIndex("ComandaId");
 
-                b.ToTable("ComandaItens");
-            });
+                    b.ToTable("ComandaItens");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.Mesa", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("NumeroMesa")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("NumeroMesa")
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("SituacaoMesa")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("SituacaoMesa")
+                        .HasColumnType("INTEGER");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Mesas");
+                    b.ToTable("Mesas");
 
-                b.HasData(
-                    new
-                    {
-                        Id = 1,
-                        NumeroMesa = 1,
-                        SituacaoMesa = 0
-                    },
-                    new
-                    {
-                        Id = 2,
-                        NumeroMesa = 2,
-                        SituacaoMesa = 0
-                    },
-                    new
-                    {
-                        Id = 3,
-                        NumeroMesa = 3,
-                        SituacaoMesa = 0
-                    });
-            });
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            NumeroMesa = 1,
+                            SituacaoMesa = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            NumeroMesa = 2,
+                            SituacaoMesa = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            NumeroMesa = 3,
+                            SituacaoMesa = 0
+                        });
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.PedidoCozinha", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("ComandaId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("ComandaId")
+                        .HasColumnType("INTEGER");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("ComandaId");
+                    b.HasIndex("ComandaId");
 
-                b.ToTable("PedidoCozinhas");
-            });
+                    b.ToTable("PedidoCozinhas");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.PedidoCozinhaItem", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("ComandaItemId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("ComandaItemId")
+                        .HasColumnType("INTEGER");
 
-                b.Property<int>("PedidoCozinhaId")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("PedidoCozinhaId")
+                        .HasColumnType("INTEGER");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("ComandaItemId");
+                    b.HasIndex("ComandaItemId");
 
-                b.HasIndex("PedidoCozinhaId");
+                    b.HasIndex("PedidoCozinhaId");
 
-                b.ToTable("PedidoCozinhaItens");
-            });
+                    b.ToTable("PedidoCozinhaItens");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.Reserva", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<DateTime>("DataHoraReserva")
-                    .HasColumnType("TEXT");
+                    b.Property<DateTime>("DataHoraReserva")
+                        .HasColumnType("TEXT");
 
-                b.Property<string>("NomeCliente")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("NomeCliente")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.Property<int>("NumeroMesa")
-                    .HasColumnType("INTEGER");
+                    b.Property<int>("NumeroMesa")
+                        .HasColumnType("INTEGER");
 
-                b.Property<string>("Telefone")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Reservas");
-            });
+                    b.ToTable("Reservas");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.Usuario", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("INTEGER");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                b.Property<string>("Email")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.Property<string>("Nome")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.Property<string>("Senha")
-                    .IsRequired()
-                    .HasColumnType("TEXT");
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Usuarios");
+                    b.ToTable("Usuarios");
 
-                b.HasData(
-                    new
-                    {
-                        Id = 1,
-                        Email = "admin@admin.com",
-                        Nome = "Admin",
-                        Senha = "admin123"
-                    });
-            });
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@admin.com",
+                            Nome = "Admin",
+                            Senha = "admin123"
+                        });
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.CardapioItem", b =>
-            {
-                b.HasOne("Comandas.Api.Models.CategoriaCardapio", "CategoriaCardapio")
-                    .WithMany()
-                    .HasForeignKey("CategoriaCardapioId");
+                {
+                    b.HasOne("Comandas.Api.Models.CategoriaCardapio", "CategoriaCardapio")
+                        .WithMany()
+                        .HasForeignKey("CategoriaCardapioId");
 
-                b.Navigation("CategoriaCardapio");
-            });
+                    b.Navigation("CategoriaCardapio");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.ComandaItem", b =>
-            {
-                b.HasOne("Comandas.Api.Models.CardapioItem", "CardapioItem")
-                    .WithMany()
-                    .HasForeignKey("CardapioItemId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                {
+                    b.HasOne("Comandas.Api.Models.CardapioItem", "CardapioItem")
+                        .WithMany()
+                        .HasForeignKey("CardapioItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.HasOne("Comandas.Api.Models.Comanda", "Comanda")
-                    .WithMany("Itens")
-                    .HasForeignKey("ComandaId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    b.HasOne("Comandas.Api.Models.Comanda", "Comanda")
+                        .WithMany("Itens")
+                        .HasForeignKey("ComandaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.Navigation("CardapioItem");
+                    b.Navigation("CardapioItem");
 
-                b.Navigation("Comanda");
-            });
+                    b.Navigation("Comanda");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.PedidoCozinha", b =>
-            {
-                b.HasOne("Comandas.Api.Models.Comanda", "Comanda")
-                    .WithMany()
-                    .HasForeignKey("ComandaId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                {
+                    b.HasOne("Comandas.Api.Models.Comanda", "Comanda")
+                        .WithMany()
+                        .HasForeignKey("ComandaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.Navigation("Comanda");
-            });
+                    b.Navigation("Comanda");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.PedidoCozinhaItem", b =>
-            {
-                b.HasOne("Comandas.Api.Models.ComandaItem", "ComandaItem")
-                    .WithMany()
-                    .HasForeignKey("ComandaItemId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                {
+                    b.HasOne("Comandas.Api.Models.ComandaItem", "ComandaItem")
+                        .WithMany()
+                        .HasForeignKey("ComandaItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.HasOne("Comandas.Api.Models.PedidoCozinha", "PedidoCozinha")
-                    .WithMany("Itens")
-                    .HasForeignKey("PedidoCozinhaId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    b.HasOne("Comandas.Api.Models.PedidoCozinha", "PedidoCozinha")
+                        .WithMany("Itens")
+                        .HasForeignKey("PedidoCozinhaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.Navigation("ComandaItem");
+                    b.Navigation("ComandaItem");
 
-                b.Navigation("PedidoCozinha");
-            });
+                    b.Navigation("PedidoCozinha");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.Comanda", b =>
-            {
-                b.Navigation("Itens");
-            });
+                {
+                    b.Navigation("Itens");
+                });
 
             modelBuilder.Entity("Comandas.Api.Models.PedidoCozinha", b =>
-            {
-                b.Navigation("Itens");
-            });
+                {
+                    b.Navigation("Itens");
+                });
 #pragma warning restore 612, 618
         }
     }
