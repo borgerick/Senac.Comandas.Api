@@ -9,6 +9,19 @@ builder.Services.AddDbContext<ComandasDbContext>(options =>
     //options.UseSqlServer("") // Connection string can be added here
     );
 
+
+// Adiciona CORS para permitir o frontend rodando em localhost:5500
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVSCodeFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5500", "http://127.0.0.1:5500")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,6 +39,9 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+// Ativa o CORS antes do Authorization
+app.UseCors("AllowVSCodeFrontend");
 
 app.UseAuthorization();
 

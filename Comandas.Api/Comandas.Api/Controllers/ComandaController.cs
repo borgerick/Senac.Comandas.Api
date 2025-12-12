@@ -19,11 +19,12 @@ public class ComandaController : ControllerBase
     public IResult Get()
     {
         var comandas = _context.Comandas
-            .Select( c=> new ComandaCreateResponse
+            .Select( banana => new ComandaCreateResponse
             {
-                NomeCliente = c.NomeCliente,
-                NumeroMesa = c.NumeroMesa,
-                Itens = c.Itens.Select(i => new ComandaItemResponse
+                Id = banana.Id,
+                NomeCliente = banana.NomeCliente,
+                NumeroMesa = banana.NumeroMesa,
+                Itens = banana.Itens.Select(i => new ComandaItemResponse
                 {
                     Id = i.Id,
                     Titulo = _context.CardapioItens
